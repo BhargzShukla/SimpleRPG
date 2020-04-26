@@ -85,9 +85,15 @@ func _input(event):
 			# What's the target?
 			var target = $RayCast2D.get_collider()
 			if target != null:
+				# Is it a skeleton?
 				if target.name.find("Skeleton") >= 0:
 					#Skeleton hit
 					target.hit(attack_damage)
+				# Is it an NPC?
+				elif target.is_in_group("NPCs"):
+					# Talk to NPC
+					target.talk()
+					return
 			
 			# Play attack animation
 			attack_playing = true

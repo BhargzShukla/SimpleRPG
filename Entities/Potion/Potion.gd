@@ -12,7 +12,7 @@ func _ready():
 		$Sprite.region_rect.position.x = 0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if Engine.editor_hint:
 		if type == Potion.MANA:
 			$Sprite.region_rect.position.x = 8
