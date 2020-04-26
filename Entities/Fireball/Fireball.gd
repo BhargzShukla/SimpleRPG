@@ -18,6 +18,9 @@ func _process(delta):
 
 
 func _on_Fireball_body_entered(body):
+	# Play explosion sound
+	$ExplosionSound.play()
+	
 	# Ignore collision wit "Player" and "Water"
 	if body.name == "Player":
 		return

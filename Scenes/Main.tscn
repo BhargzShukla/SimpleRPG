@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=2]
+[gd_scene load_steps=63 format=2]
 
 [ext_resource path="res://Entities/Player/player_up_idle_1.png" type="Texture" id=1]
 [ext_resource path="res://Entities/Player/Player.gd" type="Script" id=2]
@@ -50,6 +50,13 @@
 [ext_resource path="res://Entities/Fiona/Fiona.tscn" type="PackedScene" id=48]
 [ext_resource path="res://Entities/Necklace/Necklace.tscn" type="PackedScene" id=49]
 [ext_resource path="res://GUI/DialoguePopup.gd" type="Script" id=50]
+[ext_resource path="res://Sounds/mountain-trials.ogg" type="AudioStream" id=51]
+[ext_resource path="res://Sounds/night-chip.ogg" type="AudioStream" id=52]
+[ext_resource path="res://Sounds/attack.wav" type="AudioStream" id=53]
+[ext_resource path="res://Sounds/fireball.wav" type="AudioStream" id=54]
+[ext_resource path="res://Sounds/object.wav" type="AudioStream" id=55]
+[ext_resource path="res://Sounds/level_up.wav" type="AudioStream" id=56]
+[ext_resource path="res://GUI/MenuPopup.gd" type="Script" id=57]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -221,6 +228,25 @@ cast_to = Vector2( 0, 8 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
 "anims/Game Over" = SubResource( 3 )
 anims/Hit = SubResource( 4 )
+
+[node name="GameOverMusic" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 52 )
+
+[node name="Music" type="AudioStreamPlayer" parent="Player"]
+pause_mode = 2
+stream = ExtResource( 51 )
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="Player"]
+stream = ExtResource( 53 )
+volume_db = 6.0
+
+[node name="FireballSound" type="AudioStreamPlayer2D" parent="Player"]
+stream = ExtResource( 54 )
+volume_db = 6.0
+
+[node name="ItemSound" type="AudioStreamPlayer2D" parent="Player"]
+stream = ExtResource( 55 )
+volume_db = 6.0
 
 [node name="Tilemap" type="TileMap" parent="."]
 tile_set = ExtResource( 3 )
@@ -425,6 +451,9 @@ margin_right = 100.0
 margin_bottom = 50.0
 popup_exclusive = true
 script = ExtResource( 47 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/LevelUp"]
 margin_right = 100.0
@@ -470,6 +499,10 @@ text = "S"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="LevelUpSound" type="AudioStreamPlayer" parent="CanvasLayer/LevelUp"]
+stream = ExtResource( 56 )
+volume_db = 3.0
 
 [node name="Dialogue" type="Popup" parent="CanvasLayer"]
 pause_mode = 2
@@ -519,6 +552,66 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "[A] Yes    [S] No"
 align = 1
 
+[node name="MenuPopup" type="Popup" parent="CanvasLayer"]
+pause_mode = 2
+visible = true
+margin_right = 40.0
+margin_bottom = 40.0
+popup_exclusive = true
+script = ExtResource( 57 )
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/MenuPopup"]
+margin_left = 60.0
+margin_top = 40.0
+margin_right = 260.0
+margin_bottom = 140.0
+color = Color( 0.313726, 0.313726, 0.313726, 1 )
+
+[node name="Resume" type="ColorRect" parent="CanvasLayer/MenuPopup"]
+margin_left = 70.0
+margin_top = 50.0
+margin_right = 250.0
+margin_bottom = 70.0
+
+[node name="Label" type="Label" parent="CanvasLayer/MenuPopup/Resume"]
+margin_right = 180.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 37 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Resume"
+align = 1
+valign = 1
+
+[node name="Restart" type="ColorRect" parent="CanvasLayer/MenuPopup"]
+margin_left = 70.0
+margin_top = 80.0
+margin_right = 250.0
+margin_bottom = 100.0
+
+[node name="Label" type="Label" parent="CanvasLayer/MenuPopup/Restart"]
+margin_right = 180.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 37 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Restart"
+align = 1
+valign = 1
+
+[node name="Exit" type="ColorRect" parent="CanvasLayer/MenuPopup"]
+margin_left = 70.0
+margin_top = 110.0
+margin_right = 250.0
+margin_bottom = 130.0
+
+[node name="Label" type="Label" parent="CanvasLayer/MenuPopup/Exit"]
+margin_right = 180.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 37 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Exit"
+align = 1
+valign = 1
+
 [node name="SkeletonSpawner" parent="." instance=ExtResource( 39 )]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -536,10 +629,10 @@ position = Vector2( 596, 83 )
 [node name="Necklace" parent="." instance=ExtResource( 49 )]
 position = Vector2( 650, 663 )
 [connection signal="player_level_up" from="Player" to="CanvasLayer/LevelUp" method="_on_Player_player_level_up"]
-[connection signal="player_stats_changed" from="Player" to="CanvasLayer/HealthPotions" method="_on_Player_player_stats_changed"]
 [connection signal="player_stats_changed" from="Player" to="CanvasLayer/Health" method="_on_Player_player_stats_changed"]
 [connection signal="player_stats_changed" from="Player" to="CanvasLayer/Mana" method="_on_Player_player_stats_changed"]
 [connection signal="player_stats_changed" from="Player" to="CanvasLayer/XP" method="_on_Player_player_stats_changed"]
+[connection signal="player_stats_changed" from="Player" to="CanvasLayer/HealthPotions" method="_on_Player_player_stats_changed"]
 [connection signal="player_stats_changed" from="Player" to="CanvasLayer/ManaPotions" method="_on_Player_player_stats_changed"]
 [connection signal="animation_finished" from="Player/Sprite" to="Player" method="_on_Sprite_animation_finished"]
 [connection signal="pressed" from="CanvasLayer/GameOver/Button" to="CanvasLayer/GameOver" method="_on_Button_pressed"]

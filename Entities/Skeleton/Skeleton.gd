@@ -84,6 +84,9 @@ func _process(_delta):
 			var attack_animation = get_animation_direction(last_direction) + "_attack"
 			$AnimatedSprite.play(attack_animation)
 			
+			# Play attack sound
+			$AttackSound.play()
+			
 			# Add cooldown to next attack
 			next_attack_time = time_now + attack_cooldown_time
 
@@ -139,7 +142,11 @@ func hit(damage):
 		set_process(false)
 		other_animation_playing = true
 		$AnimatedSprite.play("death")
+		
 		emit_signal("death")
+		
+		# Play death sound
+		$DeathSound.play()
 		
 		# Randomly generate a potion for skeleton to drop on death, 80% of the time
 		if randomNumberGenerator.randf() <= 0.8:
