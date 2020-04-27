@@ -90,9 +90,17 @@ func _input(event):
 					#Skeleton hit
 					target.hit(attack_damage)
 				# Is it an NPC?
-				elif target.is_in_group("NPCs"):
+				if target.is_in_group("NPCs"):
 					# Talk to NPC
 					target.talk()
+					return
+				if target.name == "Bed":
+					# Sleep
+					$AnimationPlayer.play("Sleep")
+					yield(get_tree().create_timer(1), "timeout")
+					health = max_health
+					mana = max_mana
+					emit_signal("player_stats_changed", self)
 					return
 			
 			# Play attack animation
